@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Modern Documents Dashboard</title>
+
+    <!-- Inter font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Tailwind CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      html,body{font-family: 'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial}
+      /* Card hover */
+      .card-hover:hover{transform: translateY(-6px); box-shadow: 0 10px 25px rgba(16,24,40,0.06);} 
+      .truncate-2 {display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden}
+    </style>
+  </head>
+  <body class="bg-slate-50 min-h-screen text-slate-800">
+
+    <!-- Topbar -->
+    <header class="bg-white border-b sticky top-0 z-40">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex items-center justify-between h-16">
+          <div class="flex items-center gap-4">
+            <div class="p-2 rounded-lg bg-indigo-600 text-white shadow-sm">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c1.657 0 3-1.343 3-3S13.657 2 12 2 9 3.343 9 5s1.343 3 3 3zM19 21v-2a4 4 0 00-4-4H9a4 4 0 00-4 4v2" />
+              </svg>
+            </div>
+            <div>
+              <h1 class="text-lg font-semibold">MyDocs — Personal Dashboard</h1>
+              <p class="text-xs text-slate-500">Secure, quick access to your important files</p>
+            </div>
+          </div>
+
+          <div class="flex items-center gap-3">
+            <div class="hidden sm:flex items-center bg-slate-100 rounded-full p-2 pl-3 pr-3 gap-2">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-slate-400" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1111.293 3.293l3.207 3.207a1 1 0 01-1.414 1.414l-3.207-3.207A6 6 0 012 8z" clip-rule="evenodd" /></svg>
+              <input id="top-search" type="search" placeholder="Search documents..." class="bg-transparent outline-none text-sm" />
+            </div>
+
+            <button id="add-btn" class="bg-indigo-600 text-white px-3 py-2 rounded-lg shadow hover:bg-indigo-700 transition">+ Add Document</button>
+
+            <div class="hidden sm:block">
+              <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=200&q=60" alt="you" class="h-9 w-9 rounded-full border"/>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
+
+        <!-- Sidebar -->
+        <aside class="col-span-1 bg-white rounded-2xl p-5 shadow-sm">
+          <h3 class="text-sm font-semibold text-slate-600 mb-3">Categories</h3>
+          <nav class="space-y-2">
+            <button class="category-btn flex items-center justify-between w-full text-sm p-3 rounded-lg hover:bg-slate-50" data-cat="all">
+              <span class="flex items-center gap-3"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-indigo-500" viewBox="0 0 20 20" fill="currentColor"><path d="M3 7a4 4 0 014-4h6a4 4 0 110 8H7a4 4 0 01-4-4z"/></svg> All Documents</span>
+            </button>
+
+            <div class="mt-2 border-t pt-3">
+              <p class="text-xs text-slate-500 font-medium mb-2">School</p>
+              <button class="category-btn flex items-center justify-between w-full text-sm p-3 rounded-lg hover:bg-slate-50" data-cat="school">
+                <span class="flex items-center gap-3"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-amber-500" viewBox="0 0 20 20" fill="currentColor"><path d="M10 2L2 6l8 4 8-4-8-4z"/><path d="M2 12l8 4 8-4"/></svg> School Docs</span>
+              </button>
+            </div>
+
+            <div class="mt-3 border-t pt-3">
+              <p class="text-xs text-slate-500 font-medium mb-2">Government IDs</p>
+              <button class="category-btn flex items-center justify-between w-full text-sm p-3 rounded-lg hover:bg-slate-50" data-cat="govt">
+                <span class="flex items-center gap-3"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-emerald-500" viewBox="0 0 20 20" fill="currentColor"><path d="M5 3a2 2 0 00-2 2v9.5A1.5 1.5 0 004.5 16H6v1a1 1 0 001 1h6a1 1 0 001-1v-1h1.5A1.5 1.5 0 0019 14.5V5a2 2 0 00-2-2H5z"/></svg> Govt IDs</span>
+              </button>
+            </div>
+
+            <div class="mt-3 border-t pt-3">
+              <p class="text-xs text-slate-500 font-medium mb-2">Other</p>
+              <button class="category-btn flex items-center justify-between w-full text-sm p-3 rounded-lg hover:bg-slate-50" data-cat="other">
+                <span class="flex items-center gap-3"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-violet-500" viewBox="0 0 20 20" fill="currentColor"><path d="M3 7a1 1 0 011-1h12a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1V7z"/></svg> Other Docs</span>
+              </button>
+            </div>
+          </nav>
+        </aside>
+
+        <!-- Main content -->
+        <section class="col-span-1 lg:col-span-3">
+          <div class="flex items-center justify-between mb-4">
+            <div>
+              <h2 class="text-2xl font-semibold">Documents</h2>
+              <p class="text-sm text-slate-500">Organize school, government and other documents in one place.</p>
+            </div>
+          </div>
+
+          <!-- Grid -->
+          <div id="grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5"></div>
+
+          <!-- empty state -->
+          <div id="empty" class="hidden text-center mt-8">
+            <p class="text-slate-500">No documents found. Click <span class="font-medium">Add Document</span> to get started.</p>
+          </div>
+        </section>
+
+      </div>
+    </main>
+
+    <script>
+      // Document data with unique download links
+      const initialDocuments = [
+        {id: 1, title: '10th Marksheet', category: 'school', subcat: '10th', link: 'https://drive.google.com/view10th', download: 'https://drive.google.com/download10th', created: '2024-11-01'},
+        {id: 2, title: '12th Marksheet', category: 'school', subcat: '12th', link: 'https://drive.google.com/view12th', download: 'https://drive.google.com/download12th', created: '2024-12-02'},
+        {id: 3, title: 'Aadhaar Card', category: 'govt', subcat: 'aadhaar', link: 'https://drive.google.com/viewaadhaar', download: 'https://drive.google.com/downloadaadhaar', created: '2023-02-14'},
+        {id: 4, title: 'PAN Card', category: 'govt', subcat: 'pan', link: 'https://drive.google.com/viewpan', download: 'https://drive.google.com/downloadpan', created: '2022-09-05'},
+        {id: 5, title: 'Resume - Vikas Sharma', category: 'other', subcat: 'resume', link: 'https://drive.google.com/viewresume', download: 'https://drive.google.com/downloadresume', created: '2025-06-22'},
+{
+  id: 6,
+  title: 'gagetcertificate',
+  category: 'other',
+  subcat: 'certificate',
+  link: 'https://drive.google.com/file/d/1A8T8zYq9fY6rSTw5hObdNq7S8V5Br5JJ/view?usp=drivesdk',
+  download: 'https://drive.google.com/uc?export=download&id=1A8T8zYq9fY6rSTw5hObdNq7S8V5Br5JJ',
+  created: '2025-07-01'
+}
+      ];
+
+      let state = {docs: []};
+      const el = id => document.getElementById(id);
+      const grid = el('grid');
+      const empty = el('empty');
+
+      function getIcon(subcat){
+        const map = {'10th':'🎓','12th':'🎓','aadhaar':'🆔','pan':'💳','resume':'📄','certificate':'📜','other':'📁'};
+        return map[subcat] || '📄';
+      }
+
+      function renderGrid(){
+        grid.innerHTML = '';
+        if(state.docs.length === 0){ empty.classList.remove('hidden'); return; }
+        empty.classList.add('hidden');
+
+        state.docs.forEach(doc=>{
+          const card = document.createElement('div');
+          card.className = 'bg-white rounded-2xl p-5 shadow-sm card-hover transition transform';
+          card.innerHTML = `
+            <div class="flex items-start justify-between gap-3">
+              <div class="flex items-start gap-3">
+                <div class="h-12 w-12 rounded-lg bg-slate-50 flex items-center justify-center text-2xl">${getIcon(doc.subcat)}</div>
+                <div>
+                  <h3 class="font-semibold">${doc.title}</h3>
+                  <p class="text-xs text-slate-500">${doc.subcat} • ${doc.category}</p>
+                </div>
+              </div>
+              <div class="flex items-center gap-2">
+                <a href="${doc.link}" target="_blank" rel="noopener" class="text-indigo-600 font-medium text-sm px-3 py-1 rounded-md">View</a>
+              </div>
+            </div>
+            <div class="mt-4 flex items-center justify-between">
+              <div><span class="text-xs text-slate-400">Added: ${doc.created}</span></div>
+              <div class="flex items-center gap-2">
+                <a href="${doc.download}" target="_blank" class="text-sm bg-indigo-600 text-white px-3 py-1 rounded-md">Download</a>
+              </div>
+            </div>
+          `;
+          grid.appendChild(card);
+        });
+      }
+
+      document.addEventListener('DOMContentLoaded', ()=>{
+        state.docs = initialDocuments;
+        renderGrid();
+      });
+    </script>
+  </body>
+</html>
