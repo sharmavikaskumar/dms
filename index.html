@@ -15,79 +15,274 @@
     <script>
       tailwind.config = {
         darkMode: 'class',
+        theme: {
+          extend: {
+            colors: {
+              primary: {
+                50: '#f0f9ff',
+                100: '#e0f2fe',
+                200: '#bae6fd',
+                300: '#7dd3fc',
+                400: '#38bdf8',
+                500: '#0ea5e9',
+                600: '#0284c7',
+                700: '#0369a1',
+                800: '#075985',
+                900: '#0c4a6e',
+              },
+            },
+            animation: {
+              'fade-in': 'fadeIn 0.5s ease-out',
+              'slide-in': 'slideIn 0.3s ease-out',
+              'scale': 'scale 0.2s ease-in-out',
+              'bounce-subtle': 'bounceSubtle 2s infinite',
+            },
+            keyframes: {
+              fadeIn: {
+                '0%': { opacity: '0' },
+                '100%': { opacity: '1' },
+              },
+              slideIn: {
+                '0%': { transform: 'translateY(10px)', opacity: '0' },
+                '100%': { transform: 'translateY(0)', opacity: '1' },
+              },
+              scale: {
+                '0%': { transform: 'scale(0.95)' },
+                '100%': { transform: 'scale(1)' },
+              },
+              bounceSubtle: {
+                '0%, 100%': { transform: 'translateY(0)' },
+                '50%': { transform: 'translateY(-5px)' },
+              }
+            }
+          }
+        }
       }
     </script>
 
     <style>
       html,body{font-family: 'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial}
-      .card-hover:hover{transform: translateY(-6px); box-shadow: 0 10px 25px rgba(16,24,40,0.06);} 
+      .card-hover {
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+      .card-hover:hover{
+        transform: translateY(-6px) scale(1.01); 
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+      } 
       .truncate-2 {display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden}
-      #sidebar {transition: transform 0.3s ease;}
-      #sidebar.closed {transform: translateX(-100%);}
+      #sidebar {
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+      #sidebar.closed {
+        transform: translateX(-100%);
+      }
+      @media (min-width: 640px) {
+        #sidebar {
+          transform: translateX(0) !important; /* Force sidebar to be visible on desktop */
+        }
+      }
       @media (max-width: 640px) {
-        #mobile-add {position: fixed; bottom: 1.5rem; right: 1.5rem; z-index: 50;}
+        #mobile-add {
+          position: fixed; 
+          bottom: 1.5rem; 
+          right: 1.5rem; 
+          z-index: 50;
+          box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2);
+          transition: all 0.3s ease;
+        }
+        #mobile-add:hover {
+          transform: scale(1.1);
+        }
+      }
+      
+      /* Custom scrollbar */
+      ::-webkit-scrollbar {
+        width: 6px;
+      }
+      ::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #cbd5e1;
+        border-radius: 3px;
+      }
+      .dark ::-webkit-scrollbar-thumb {
+        background: #475569;
+      }
+      
+      /* Smooth transitions for theme change */
+      * {
+        transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+      }
+      
+      /* Glass morphism effect */
+      .glass {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+      }
+      .dark .glass {
+        background: rgba(0, 0, 0, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.1);
       }
     </style>
   </head>
-  <body class="bg-slate-50 dark:bg-slate-900 min-h-screen text-slate-800 dark:text-slate-200">
+  <body class="bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800 min-h-screen text-slate-800 dark:text-slate-200">
 
     <!-- Topbar -->
-    <header class="bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 sticky top-0 z-40">
+    <header class="bg-white/80 dark:bg-slate-800/80 border-b border-slate-200/50 dark:border-slate-700/50 sticky top-0 z-40 glass">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex items-center justify-between h-16">
           <!-- Left -->
           <div class="flex items-center gap-3">
-            <button id="menu-btn" class="sm:hidden p-2 rounded-md bg-slate-100 dark:bg-slate-700">☰</button>
-            <h1 class="text-base sm:text-lg font-semibold">📂 MyDocs</h1>
+            <button id="menu-btn" class="sm:hidden p-2 rounded-md bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 transition-colors duration-200">☰</button>
+            <h1 class="text-base sm:text-lg font-bold bg-gradient-to-r from-primary-600 to-primary-800 bg-clip-text text-transparent flex items-center gap-2">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+              </svg>
+              DocVault
+            </h1>
           </div>
 
           <!-- Search desktop -->
-          <div class="hidden sm:flex items-center bg-slate-100 dark:bg-slate-700 rounded-full p-2 pl-3 pr-3 gap-2">
-            <input id="top-search" type="search" placeholder="Search documents..." class="bg-transparent outline-none text-sm" />
+          <div class="hidden sm:flex items-center bg-slate-100 dark:bg-slate-700 rounded-full p-2 pl-4 pr-4 gap-2 transition-all duration-300 focus-within:ring-2 focus-within:ring-primary-500 focus-within:bg-white dark:focus-within:bg-slate-600">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+            <input id="top-search" type="search" placeholder="Search documents..." class="bg-transparent outline-none text-sm w-40 lg:w-56" />
           </div>
 
           <!-- Right -->
           <div class="flex items-center gap-3">
-            <button id="dark-toggle" class="p-2 rounded-md bg-slate-100 dark:bg-slate-700">🌙</button>
-            <button id="add-btn" class="hidden sm:block bg-indigo-600 text-white px-3 py-2 rounded-lg shadow hover:bg-indigo-700 transition">+ Add Document</button>
-            <img src="https://artfiles.alphacoders.com/113/thumb-113116.jpg" alt="you" class="h-9 w-9 rounded-full border"/>
+            <button id="dark-toggle" class="p-2 rounded-md bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 transition-colors duration-200">🌙</button>
+            <button id="add-btn" class="hidden sm:flex items-center gap-1 bg-primary-600 text-white px-4 py-2 rounded-lg shadow hover:bg-primary-700 transition-all duration-300 transform hover:-translate-y-0.5">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+              </svg>
+              <span>Add Document</span>
+            </button>
+            <div class="relative">
+              <img src="https://artfiles.alphacoders.com/113/thumb-113116.jpg" alt="you" class="h-9 w-9 rounded-full border-2 border-white dark:border-slate-700 shadow-sm hover:border-primary-400 transition-all duration-300 cursor-pointer"/>
+              <div class="absolute bottom-0 right-0 h-3 w-3 bg-green-500 rounded-full border-2 border-white dark:border-slate-800"></div>
+            </div>
           </div>
         </div>
       </div>
     </header>
 
     <div class="flex max-w-7xl mx-auto">
-      <div id="overlay" class="fixed inset-0 bg-black bg-opacity-40 hidden z-30"></div>
+      <div id="overlay" class="fixed inset-0 bg-black bg-opacity-40 hidden z-30 backdrop-blur-sm transition-opacity duration-300"></div>
 
       <!-- Sidebar -->
-      <aside id="sidebar" class="fixed sm:static top-0 left-0 h-full sm:h-auto w-64 sm:w-auto bg-white dark:bg-slate-800 rounded-r-2xl sm:rounded-2xl p-5 shadow-sm closed sm:transform-none z-40">
-        <h3 class="text-sm font-semibold text-slate-600 dark:text-slate-300 mb-3">Categories</h3>
-        <nav class="space-y-2">
-          <button class="category-btn w-full flex items-center gap-3 text-sm p-3 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700" data-cat="all">📁 All Documents</button>
-          <button class="category-btn w-full flex items-center gap-3 text-sm p-3 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700" data-cat="school">🎓 School Docs</button>
-          <button class="category-btn w-full flex items-center gap-3 text-sm p-3 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700" data-cat="govt">🆔 Govt IDs</button>
-          <button class="category-btn w-full flex items-center gap-3 text-sm p-3 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700" data-cat="other">📄 Other Docs</button>
+      <aside id="sidebar" class="fixed sm:relative top-0 left-0 h-full sm:h-auto w-64 sm:w-56 bg-white/80 dark:bg-slate-800/80 rounded-r-2xl sm:rounded-2xl p-5 shadow-lg glass closed sm:translate-x-0 sm:!transform-none z-40 border-r border-slate-200/50 dark:border-slate-700/50 sm:border-r-0">
+        <h3 class="text-xs font-semibold text-slate-500 dark:text-slate-400 mb-3 uppercase tracking-wider pl-3">Categories</h3>
+        <nav class="space-y-1">
+          <button class="category-btn w-full flex items-center gap-3 text-sm p-3 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-700/50 transition-all duration-200 animate-fade-in" data-cat="all">
+            <div class="h-8 w-8 rounded-lg bg-primary-100 dark:bg-primary-900/30 flex items-center justify-center text-primary-600 dark:text-primary-400">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7m0 10a2 2 0 002 2h2a2 2 0 002-2V7a2 2 0 00-2-2h-2a2 2 0 00-2 2" />
+              </svg>
+            </div>
+            <span class="font-medium">All Documents</span>
+          </button>
+          <button class="category-btn w-full flex items-center gap-3 text-sm p-3 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-700/50 transition-all duration-200 animate-fade-in" data-cat="school">
+            <div class="h-8 w-8 rounded-lg bg-orange-100 dark:bg-orange-900/30 flex items-center justify-center text-orange-600 dark:text-orange-400">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path d="M12 14l9-5-9-5-9 5 9 5z" />
+                <path d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z" />
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l9-5-9-5-9 5 9 5zm0 0l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14zm-4 6v-7.5l4-2.222" />
+              </svg>
+            </div>
+            <span class="font-medium">School Docs</span>
+          </button>
+          <button class="category-btn w-full flex items-center gap-3 text-sm p-3 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-700/50 transition-all duration-200 animate-fade-in" data-cat="govt">
+            <div class="h-8 w-8 rounded-lg bg-green-100 dark:bg-green-900/30 flex items-center justify-center text-green-600 dark:text-green-400">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+              </svg>
+            </div>
+            <span class="font-medium">Govt IDs</span>
+          </button>
+          <button class="category-btn w-full flex items-center gap-3 text-sm p-3 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-700/50 transition-all duration-200 animate-fade-in" data-cat="other">
+            <div class="h-8 w-8 rounded-lg bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center text-purple-600 dark:text-purple-400">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+              </svg>
+            </div>
+            <span class="font-medium">Other Docs</span>
+          </button>
         </nav>
+        
+        <div class="mt-8 pt-5 border-t border-slate-200/50 dark:border-slate-700/50">
+          <h3 class="text-xs font-semibold text-slate-500 dark:text-slate-400 mb-3 uppercase tracking-wider pl-3">Quick Access</h3>
+          <div class="space-y-2">
+            <button class="w-full flex items-center gap-3 text-sm p-3 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-700/50 transition-all duration-200">
+              <div class="h-8 w-8 rounded-lg bg-slate-100 dark:bg-slate-700 flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
+              <span class="font-medium">Recent</span>
+            </button>
+            <button class="w-full flex items-center gap-3 text-sm p-3 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-700/50 transition-all duration-200">
+              <div class="h-8 w-8 rounded-lg bg-slate-100 dark:bg-slate-700 flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z" />
+                </svg>
+              </div>
+              <span class="font-medium">Important</span>
+            </button>
+          </div>
+        </div>
       </aside>
 
       <!-- Main content -->
       <main class="flex-1 px-4 sm:px-6 lg:px-8 py-8">
-        <div class="flex items-center justify-between mb-4">
-          <div>
-            <h2 class="text-xl sm:text-2xl font-semibold">Documents</h2>
-            <p class="text-sm text-slate-500 dark:text-slate-400">Organize school, government and other documents in one place.</p>
+        <div class="flex items-center justify-between mb-6">
+          <div class="animate-slide-in">
+            <h2 class="text-2xl sm:text-3xl font-bold text-slate-800 dark:text-slate-100">My Documents</h2>
+            <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">Organize school, government and other documents in one place.</p>
+          </div>
+          <div class="hidden sm:flex items-center gap-2">
+            <button class="p-2 rounded-lg bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 transition-colors duration-200">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4h13M3 8h9m-9 4h9m5-4v12m0 0l-4-4m4 4l4-4" />
+              </svg>
+            </button>
+            <button class="p-2 rounded-lg bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 transition-colors duration-200">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+              </svg>
+            </button>
           </div>
         </div>
 
         <div id="grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5"></div>
-        <div id="empty" class="hidden text-center mt-8">
-          <p class="text-slate-500 dark:text-slate-400">No documents found. Click <span class="font-medium">Add Document</span> to get started.</p>
+        <div id="empty" class="hidden text-center mt-12 animate-fade-in">
+          <div class="mx-auto w-24 h-24 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center mb-4 animate-bounce-subtle">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+            </svg>
+          </div>
+          <h3 class="text-lg font-medium text-slate-700 dark:text-slate-300 mb-2">No documents found</h3>
+          <p class="text-slate-500 dark:text-slate-400 mb-4">Get started by adding your first document</p>
+          <button class="bg-primary-600 text-white px-4 py-2 rounded-lg shadow hover:bg-primary-700 transition-all duration-300 inline-flex items-center gap-1">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+            </svg>
+            <span>Add Document</span>
+          </button>
         </div>
       </main>
     </div>
 
     <!-- Floating add -->
-    <button id="mobile-add" class="sm:hidden bg-indigo-600 text-white px-5 py-3 rounded-full shadow-lg hover:bg-indigo-700">+ Add</button>
+    <button id="mobile-add" class="sm:hidden bg-primary-600 text-white px-5 py-4 rounded-full shadow-lg hover:bg-primary-700 transition-all duration-300 flex items-center justify-center">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+      </svg>
+    </button>
 
     <script>
       const initialDocuments = [
@@ -97,14 +292,14 @@
         {id:4,title:'PAN Card',category:'govt',subcat:'pan',link:'#',download:'#',created:'2022-09-05'},
         {id:5,title:'Resume - Vikas Sharma',category:'other',subcat:'resume',link:'#',download:'#',created:'2025-06-22'},
         {
-  id: 6,
-  title: 'gagetcertificate',
-  category: 'other',
-  subcat: 'certificate',
-  link: 'https://drive.google.com/file/d/1A8T8zYq9fY6rSTw5hObdNq7S8V5Br5JJ/view?usp=drivesdk',
-  download: 'https://drive.google.com/uc?export=download&id=1A8T8zYq9fY6rSTw5hObdNq7S8V5Br5JJ',
-  created: '2025-07-01'
-}
+          id: 6,
+          title: 'gagetcertificate',
+          category: 'other',
+          subcat: 'certificate',
+          link: 'https://drive.google.com/file/d/1A8T8zYq9fY6rSTw5hObdNq7S8V5Br5JJ/view?usp=drivesdk',
+          download: 'https://drive.google.com/uc?export=download&id=1A8T8zYq9fY6rSTw5hObdNq7S8V5Br5JJ',
+          created: '2025-07-01'
+        }
       ];
 
       let state = {docs: initialDocuments, filter:'all'};
@@ -115,29 +310,42 @@
         const map={'10th':'🎓','12th':'🎓','aadhaar':'🆔','pan':'💳','resume':'📄','certificate':'📜'};
         return map[s]||'📁';
       }
+      
+      function formatDate(dateString) {
+        const options = { year: 'numeric', month: 'short', day: 'numeric' };
+        return new Date(dateString).toLocaleDateString(undefined, options);
+      }
 
       function renderGrid(){
         grid.innerHTML='';
         const docs = state.filter==='all' ? state.docs : state.docs.filter(d=>d.category===state.filter);
         if(docs.length===0){empty.classList.remove('hidden');return;}
         empty.classList.add('hidden');
-        docs.forEach(doc=>{
+        
+        // Add staggered animation delay
+        docs.forEach((doc, index) => {
+          const delay = index * 0.1;
           grid.innerHTML+=`
-          <div class="bg-white dark:bg-slate-800 rounded-2xl p-5 shadow-sm card-hover transition transform">
+          <div class="bg-white/80 dark:bg-slate-800/80 rounded-2xl p-5 shadow-sm card-hover transition-all duration-300 border border-slate-200/50 dark:border-slate-700/50 glass animate-slide-in" style="animation-delay: ${delay}s">
             <div class="flex items-start justify-between gap-3 flex-wrap">
               <div class="flex items-start gap-3">
-                <div class="h-12 w-12 rounded-lg bg-slate-50 dark:bg-slate-700 flex items-center justify-center text-2xl">${getIcon(doc.subcat)}</div>
-                <div>
-                  <h3 class="font-semibold text-base">${doc.title}</h3>
-                  <p class="text-xs text-slate-500 dark:text-slate-400">${doc.subcat} • ${doc.category}</p>
+                <div class="h-12 w-12 rounded-xl bg-primary-50 dark:bg-primary-900/20 flex items-center justify-center text-2xl">${getIcon(doc.subcat)}</div>
+                <div class="max-w-[60%]">
+                  <h3 class="font-semibold text-slate-800 dark:text-slate-100 text-base truncate">${doc.title}</h3>
+                  <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">${doc.subcat} • ${doc.category}</p>
                 </div>
               </div>
               <div class="flex gap-2 mt-2 sm:mt-0">
-                <a href="${doc.link}" target="_blank" class="text-indigo-600 dark:text-indigo-400 font-medium text-sm px-3 py-1 rounded-md border border-indigo-200 dark:border-indigo-700">View</a>
-                <a href="${doc.download}" target="_blank" class="text-sm bg-indigo-600 text-white px-3 py-1 rounded-md">Download</a>
+                <a href="${doc.link}" target="_blank" class="text-primary-600 dark:text-primary-400 font-medium text-sm px-3 py-1 rounded-md border border-primary-200 dark:border-primary-700 hover:bg-primary-50 dark:hover:bg-primary-900/30 transition-colors duration-200">View</a>
+                <a href="${doc.download}" target="_blank" class="text-sm bg-primary-600 text-white px-3 py-1 rounded-md hover:bg-primary-700 transition-colors duration-200 flex items-center gap-1">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                  </svg>
+                  <span>Download</span>
+                </a>
               </div>
             </div>
-            <div class="mt-3"><span class="text-xs text-slate-400">Added: ${doc.created}</span></div>
+            <div class="mt-4 pt-3 border-t border-slate-200/50 dark:border-slate-700/50"><span class="text-xs text-slate-400">Added: ${formatDate(doc.created)}</span></div>
           </div>`;
         });
       }
@@ -145,18 +353,32 @@
       document.addEventListener('DOMContentLoaded',()=>{
         renderGrid();
 
+        // Fix for sidebar visibility on desktop
+        if (window.innerWidth >= 640) {
+          sidebar.classList.remove('closed');
+        }
+
         // Category filter
         document.querySelectorAll('.category-btn').forEach(btn=>{
           btn.addEventListener('click',()=>{
             state.filter=btn.dataset.cat;
             renderGrid();
-            sidebar.classList.add('closed');overlay.classList.add('hidden');
+            if (window.innerWidth < 640) {
+              sidebar.classList.add('closed');
+              overlay.classList.add('hidden');
+            }
           });
         });
 
         // Sidebar mobile toggle
-        el('menu-btn').addEventListener('click',()=>{sidebar.classList.toggle('closed');overlay.classList.toggle('hidden');});
-        overlay.addEventListener('click',()=>{sidebar.classList.add('closed');overlay.classList.add('hidden');});
+        el('menu-btn').addEventListener('click',()=>{
+          sidebar.classList.toggle('closed');
+          overlay.classList.toggle('hidden');
+        });
+        overlay.addEventListener('click',()=>{
+          sidebar.classList.add('closed');
+          overlay.classList.add('hidden');
+        });
 
         // Dark mode toggle
         const darkToggle=el('dark-toggle');
@@ -164,9 +386,36 @@
           document.documentElement.classList.toggle('dark',dark);
           localStorage.setItem('darkmode',dark?'on':'off');
           darkToggle.textContent=dark?'☀️':'🌙';
+          darkToggle.classList.add('animate-scale');
+          setTimeout(() => darkToggle.classList.remove('animate-scale'), 200);
         }
         setDark(localStorage.getItem('darkmode')==='on');
         darkToggle.addEventListener('click',()=>setDark(!document.documentElement.classList.contains('dark')));
+        
+        // Search functionality
+        const searchInput = el('top-search');
+        searchInput.addEventListener('input', (e) => {
+          const searchTerm = e.target.value.toLowerCase();
+          if (searchTerm) {
+            state.docs = initialDocuments.filter(doc => 
+              doc.title.toLowerCase().includes(searchTerm) || 
+              doc.category.toLowerCase().includes(searchTerm) ||
+              doc.subcat.toLowerCase().includes(searchTerm)
+            );
+          } else {
+            state.docs = initialDocuments;
+          }
+          renderGrid();
+        });
+        
+        // Window resize handler to ensure sidebar is visible on desktop
+        window.addEventListener('resize', () => {
+          if (window.innerWidth >= 640) {
+            sidebar.classList.remove('closed');
+          } else {
+            sidebar.classList.add('closed');
+          }
+        });
       });
     </script>
   </body>
